@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int minMutation(string start, string end, vector<string>& bank) {
+        queue<string>q;
+        unordered_set<string>vis;
+        
+        q.push(start);
+        vis.insert(start);
+        
+        int count=0;
+        
+        while(!q.empty())
+        {
+            int n=q.size();
+            for(int i=0;i<n;++i)
+            {
+                string node=q.front();
+                q.pop();
+                if(node==end)
+                {
+                    return count;
+                }
+                //check with all replacmeents
+                for(auto ch:"ACGT")
+                {
+
+                    for(int i=0;i<node.length();++i)
+                    {
+                        string curr=node;
+                        curr[i]=ch;
+                        if(!vis.count(curr) && (find(bank.begin(),bank.end(),curr)!=bank.end()))
+                        {
+                            vis.insert(curr);
+                            q.push(curr);
+                        }
+                    }
+                }
+            }
+            count++;
+        }
+        return -1;
+    }
+};
