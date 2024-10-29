@@ -1,0 +1,29 @@
+class Solution {
+public:
+
+    int solve(int row,int col,int curr,vector<vector<int>>&grid,vector<vector<int>>&dp){
+        if(row<0||col<0||row>=grid.size()||col>=grid[0].size()||grid[row][col]<=curr){
+            return 0;
+        }
+        int maxi=0;
+        
+        if(dp[row][col]!=-1)return dp[row][col];
+
+        maxi=max(maxi,1+solve(row-1,col+1,grid[row][col],grid,dp));
+        maxi=max(maxi,1+solve(row,col+1,grid[row][col],grid,dp));
+        maxi=max(maxi,1+solve(row+1,col+1,grid[row][col],grid,dp));
+        return dp[row][col]=maxi;
+        
+    }    
+
+    int maxMoves(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        vector<vector<int>>dp(m,vector<int>(n,-1));
+        int ans=0;
+        for(int i=0;i<grid.size();i++){
+            ans=max(ans,solve(i,0,-1,grid,dp));
+        }
+        return ans-1;
+    }
+};
