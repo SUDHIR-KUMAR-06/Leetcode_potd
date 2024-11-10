@@ -1,0 +1,58 @@
+Intuition
+  using sliding window to find minimum subarray.
+Approach
+  store setbit of current element in setbit array
+  if bit of all element of current window if >=k then
+  start removing element from start, also erasebit from setbit array
+Complexity
+  Time complexity: roughly O(n)
+Space complexity:
+  O(32) == constant
+
+Code:-
+class Solution {
+public:
+
+    int getvalue(vector<int>&setbit){
+        int value=0;
+        for(int i=0;i<32;i++){
+            if(setbit[i]>0){
+                value|=(1<<i);
+            }
+        }
+        return value;
+    }
+
+    void erasebit(vector<int>&setbit,int num){
+        int count=0;
+        while(num>0){
+            if(num&1){setbit[count]--;}
+            count++;
+            num>>=1;
+        }
+    }
+
+    void updatebit(vector<int>&setbit,int num){
+        int count=0;
+        while(num>0){
+            if(num&1){setbit[count]++;}
+            count++;
+            num>>=1;
+        }
+    }
+
+    int minimumSubarrayLength(vector<int>& nums, int k) {
+        int start=0,end=0,mini=INT_MAX;
+        vector<int>setbit(32,0);
+        while(end<nums.size()){
+            updatebit(setbit,nums[end]);
+            while(start<=end && getvalue(setbit)>=k){
+                mini=min(mini,end-start+1);
+                erasebit(setbit,nums[start]);
+                start++;
+            }
+            end++;
+        }
+        return mini==INT_MAX?-1:mini;
+    }
+};
